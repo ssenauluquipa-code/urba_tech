@@ -1,0 +1,215 @@
+$accent: #534AB7;
+$accent-gradient: linear-gradient(135deg, #534AB7 0%, #7B6FE0 100%);
+$accent-light: rgba($accent, 0.06);
+$accent-border: rgba($accent, 0.15);
+$danger: #ff4d4f;
+$radius: 16px;
+$transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+$shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+$shadow-md: 0 8px 24px rgba($accent, 0.12);
+
+// ─── Input oculto ───────────────────────────────────────
+.hidden-input {
+  display: none;
+}
+
+.image-display-wrapper {
+  width: 100%;
+}
+
+// ─── Contenedor con imagen ──────────────────────────────
+.image-container {
+  position: relative;
+  width: 100%;
+  border-radius: $radius;
+  overflow: hidden;
+  border: 2px solid $accent-border;
+  background: #fff;
+  transition: all $transition;
+  box-shadow: $shadow-sm;
+
+  &.is-editable {
+    cursor: pointer;
+
+    &:hover {
+      border-color: $accent;
+      box-shadow: $shadow-md;
+      transform: translateY(-2px);
+
+      .image-overlay {
+        opacity: 1;
+      }
+    }
+  }
+}
+
+.display-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: #fdfdff;
+  transition: transform $transition;
+
+  .image-container:hover & {
+    transform: scale(1.03);
+  }
+}
+
+// ─── Overlay de acciones ────────────────────────────────
+.image-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  opacity: 0;
+  transition: opacity $transition;
+  border-radius: $radius;
+}
+
+.overlay-btn {
+  width: 48px !important;
+  height: 48px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  border: none !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: all $transition !important;
+
+  &:hover {
+    transform: scale(1.15) !important;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+  }
+
+  &.edit-btn {
+    background: $accent-gradient !important;
+    color: #fff !important;
+  }
+
+  &.delete-btn {
+    background: #fff !important;
+    color: $danger !important;
+  }
+}
+
+// ─── Estado vacío ───────────────────────────────────────
+.empty-container {
+  width: 100%;
+  max-width: 320px;
+  aspect-ratio: 1 / 1;
+  border: 2px dashed $accent-border;
+  border-radius: $radius;
+  background: #fdfdff;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  transition: all $transition;
+  position: relative;
+  outline: none;
+
+  &.is-editable {
+    cursor: pointer;
+
+    &:hover {
+      border-color: $accent;
+      background: $accent-light;
+      box-shadow: $shadow-md;
+      transform: translateY(-2px);
+
+      .empty-icon {
+        background: $accent-gradient;
+        box-shadow: 0 8px 16px rgba($accent, 0.3);
+        
+        span[nz-icon] {
+          color: #fff;
+          transform: rotate(15deg);
+        }
+      }
+    }
+  }
+}
+
+.empty-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 20px;
+  background: rgba($accent, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+  transition: all $transition;
+
+  span[nz-icon] {
+    font-size: 28px;
+    color: $accent;
+    transition: all $transition;
+  }
+}
+
+.empty-text {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.empty-hint {
+  font-size: 13px;
+  color: #6e6e80;
+  margin: 0;
+  max-width: 200px;
+  line-height: 1.4;
+}
+
+// ─── Variantes ─────────────────────────────────────────
+
+.image-container.variant-profile,
+.empty-container.variant-profile {
+  aspect-ratio: 1 / 1;
+  max-width: 320px;
+}
+
+.image-container.variant-profile .display-image {
+  object-fit: cover;
+}
+
+.image-container.variant-logo,
+.empty-container.variant-logo {
+  aspect-ratio: auto;
+  max-width: 350px;
+  width: 100%;
+  padding: 16px;
+  background: transparent;
+  box-shadow: none;
+  border-color: transparent;
+}
+
+.image-container.variant-logo {
+  border: 1px solid $accent-border;
+  background: #fff;
+  border-radius: 12px;
+}
+
+.empty-container.variant-logo {
+  border: 2px dashed $accent-border;
+  aspect-ratio: 16 / 9;
+}
+
+.image-container.variant-logo .display-image {
+  object-fit: contain;
+  background: transparent;
+  max-height: 200px;
+}
+
+

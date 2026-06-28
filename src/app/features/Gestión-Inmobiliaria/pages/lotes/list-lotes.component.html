@@ -1,0 +1,77 @@
+<app-page-container
+  title="Gestión de Lotes"
+  [permissionScope]="EAppModule.LOTES"
+  [showNew]="true"
+  [showOptions]="true"
+  (AddNew)="onAddNewLote()"
+  (MenuExportPDF)="exportarPDF()"
+  (MenuExportExcel)="exportarExcel()"
+>
+  <div class="row">
+    <div class="col-md-3 col-sm-6">
+      <app-form-field label="Manzana">
+        <app-select-manzanas
+          [inputControl]="manzanaIdControl"
+          [placeholder]="'Seleccione manzana'"
+        >
+        </app-select-manzanas>
+      </app-form-field>
+    </div>
+
+    <!-- Columna 3: Botones de Vista (Estandarizados) -->
+    <!-- <div class="col-md-6 col-sm-12">
+      <app-form-field label="Vista">
+        <div class="btn-group w-100" role="group">
+          <button
+            type="button"
+            class="btn btn-md flex-fill"
+            [class.btn-primary]="viewMode === 'table'"
+            [class.btn-outline-secondary]="viewMode !== 'table'"
+            (click)="viewMode = 'table'"
+            title="Vista de lista"
+          >
+            <i class="bi bi-table me-2"></i> Lista
+          </button>
+          <button
+            type="button"
+            class="btn btn-md flex-fill"
+            [class.btn-primary]="viewMode === 'map'"
+            [class.btn-outline-secondary]="viewMode !== 'map'"
+            (click)="viewMode = 'map'"
+            title="Vista de plano"
+          >
+            <i class="bi bi-map me-2"></i> Plano
+          </button>
+        </div>
+      </app-form-field>
+    </div> -->
+  </div>
+
+  <!-- 🆕 VISTA MAPA / PLANO -->
+  <!--   @if (viewMode === "map") {
+    <app-lote-visualizer
+      [lotes]="(lotes$ | async) || []"
+      (loteClick)="onLoteClick($event)"
+    >
+    </app-lote-visualizer>
+  } -->
+
+  <!-- VISTA TABLA -->
+  <!--  @if (viewMode === "table") { -->
+  <app-data-table
+    [module]="EAppModule.LOTES"
+    [rowData]="lotes()"
+    [columnDefs]="columnDefs"
+    [loading]="isLoading"
+    [showCreate]="false"
+    [actions]="[
+      tableActionEnum.EDIT,
+      tableActionEnum.VIEW,
+      tableActionEnum.DELETE,
+    ]"
+    (actionClicked)="onTableAction($event)"
+    (rowClicked)="openDetailDrawer($event.id)"
+  >
+  </app-data-table>
+  <!-- } -->
+</app-page-container>

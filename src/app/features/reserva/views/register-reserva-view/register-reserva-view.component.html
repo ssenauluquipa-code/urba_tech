@@ -1,0 +1,105 @@
+<app-card-container>
+<div class="row">
+  <!-- Columna Izquierda: Selección -->
+  <div class="col-md-6">
+    <!-- Cliente -->
+    <app-form-field label="Cliente" [required]="true">
+      <ng-container *ngIf="!isEditMode; else clienteDisabled">
+        <app-select-clientes [input_control]="clienteId"></app-select-clientes>
+      </ng-container>
+      <ng-template #clienteDisabled>
+        <input nz-input [value]="reservaData?.cliente?.nombreCompleto" disabled />
+      </ng-template>
+    </app-form-field>
+    <div class="row">
+      <div class="col-md-5 col-12">
+        <!-- Manzana -->
+        <app-form-field label="Manzana">
+          <ng-container *ngIf="!isEditMode; else manzanaDisabled">
+            <app-select-manzanas
+              [inputControl]="manzanaId"
+            >
+            </app-select-manzanas>
+          </ng-container>
+          <ng-template #manzanaDisabled>
+            <input nz-input [value]="reservaData?.lote?.manzana?.codigo" disabled />
+          </ng-template>
+        </app-form-field>
+      </div>
+
+      <div class="col-md-7 col-12">
+        <!-- Lote -->
+        <app-form-field label="Lote" [required]="true">
+          <ng-container *ngIf="!isEditMode; else loteDisabled">
+            <app-select-lotes
+              [input_control]="loteId"
+              [manzanaId]="manzanaId.value"
+              (ManzanaChange)="onManzanaFromLote($event)"
+            >
+            </app-select-lotes>
+          </ng-container>
+          <ng-template #loteDisabled>
+            <input nz-input [value]="reservaData?.lote?.numero" disabled />
+          </ng-template>
+        </app-form-field>
+      </div>
+    </div>
+  </div>
+
+  <!-- Columna Derecha: Detalles -->
+  <div class="col-md-6">
+    <div class="row">
+      <div class="col-6">
+        <app-form-field label="Monto Reserva" [required]="true">
+          <app-input-number
+            [input_control]="montoReserva"
+            [input_placeholder]="'0.00'"
+            [allow_decimals]="true"
+            [decimal_precision]="2"
+          >
+          </app-input-number>
+        </app-form-field>
+      </div>
+      <div class="col-6">
+        <app-form-field label="Moneda">
+          <app-select-moneda [input_control]="moneda" (Change)="onMonedaChange($event)"></app-select-moneda>
+        </app-form-field>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-6">
+        <app-form-field label="Fecha de Vencimiento" [required]="true">
+          <app-input-date
+            [input_control]="fechaVencimiento"
+            input_placeholder="Seleccionar fecha"
+             [disablePastDates]="true"
+          >
+          </app-input-date>
+        </app-form-field>
+      </div>
+      <div class="col-6">
+        <app-form-field label="Tipo de Cambio" [required]="true">
+          <app-input-number
+            [input_control]="tipoCambio"
+            [input_placeholder]="'Ej. 6.96'"
+            [allow_decimals]="true"
+            [decimal_precision]="2"
+          >
+          </app-input-number>
+        </app-form-field>
+      </div>
+    </div>
+  </div>
+  <app-form-field label="Observaciones">
+    <!-- Si tienes átomo textarea, úsalo. Sino usa nz-input -->
+    <app-input-textarea
+      [input_control]="observaciones"
+      placeholder="Detalles adicionales..."
+      [input_autosize]="true"
+      [input_maxlength]="500"
+    >
+    </app-input-textarea>
+  </app-form-field>
+</div>
+</app-card-container>

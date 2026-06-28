@@ -1,0 +1,144 @@
+<form [formGroup]="form" class="fade-in pago-form-layout">
+  <div class="container-fluid p-0">
+    <div class="row align-items-start">
+
+      <!-- CRONOGRAMA: izquierda en desktop, abajo en móvil -->
+      <div class="col-12 col-lg-8 col-xxl-9 order-2 order-lg-1">
+        @if (ventaIdValue) {
+        <app-plan-cuotas-cronograma [ventaId]="ventaIdValue" [montoFormulario]="montoConvertido"
+          [moneda]="ventaSeleccionada?.moneda || 'USD'" (onMontoCalculado)="onMontoCalculadoHandler($event)"
+          (onCuotasSeleccionadas)="onCuotasSeleccionadas.emit($event)">
+        </app-plan-cuotas-cronograma>
+        } @else {
+        <app-card-container title="Cronograma de Cuotas">
+          <div class="text-center py-5 text-muted">
+            <p class="mb-0 fw-semibold">
+              Seleccione un cliente y una venta para ver el plan de cuotas.
+            </p>
+          </div>
+        </app-card-container>
+        }
+      </div>
+
+      <!-- SIDEBAR: derecha en desktop, arriba en móvil -->
+      <div class="col-12 col-lg-4 col-xxl-3 order-1 order-lg-2">
+        <div class="pago-sidebar-sticky d-flex flex-column">
+
+          <!-- Datos de la Operación -->
+          <app-card-container title="Datos de la Operación">
+            <div class="d-flex flex-column">
+
+              <app-form-field label="Cliente" [required]="true">
+                <app-select-clientes
+                  [input_control]="clienteId"
+                  [preloadedClient]="clientePreCargado"
+                  input_placeholder="Buscar cliente...">
+                </app-select-clientes>
+              </app-form-field>                            
+
+              @if (clienteId.value) {
+              <app-form-field label="Contrato / Venta" [required]="true">
+                <!-- <app-select-data [proyectoId]="proyectoId" [inputControl]="ventaId" [itemList]="ventasOpciones" bindValue="ventaId"
+                  bindLabel="label" [loading]="loadingVentas" [searchable]="true" placeholder="Seleccionar venta...">
+                </app-select-data> -->
+                <app-select-venta-grid
+                  [ventas]="ventasOpciones"
+                  [loading]="loadingVentas"
+                  [currentVentaId]="ventaId.value"
+                  (ventaIdChange)="onVentaSeleccionadaDesdeGrid($event)"
+                ></app-select-venta-grid>
+              </app-form-field>
+              }
+
+              <app-form-field label="Método de Pago" [required]="true">
+                <app-metodo-pago-selector [input_control]="metodo"></app-metodo-pago-selector>
+              </app-form-field>
+
+              <!-- Moneda + Monto en la misma fila -->
+              <div class="row mb-1">
+                <div class="col-12 col-lg-5">
+                  <app-form-field label="Moneda" [required]="true">
+                    <app-select-moneda [input_control]="monedaRecibida" (Change)="onMonedaChange($event)" placeholder="Moneda">
+                    </app-select-moneda>
+                  </app-form-field>
+                </div>
+                <div class="col-12 col-lg-7">
+                  <app-form-field label="Monto Recibido" [required]="true">
+                    <app-input-number [input_control]="monto" [allow_decimals]="true" input_placeholder="0.00">
+                    </app-input-number>
+                  </app-form-field>
+                </div>
+              </div>
+
+              @if (ventaSeleccionada && ventaSeleccionada.tipoCambio) {
+              <div class="d-flex justify-content-between align-items-center bg-light border rounded px-3 py-2 mb-3">
+                <span class="text-secondary fw-semibold" style="font-size: 0.85rem;">
+                  T.C. del Contrato
+                </span>
+                <span class="fw-bold text-primary">
+                  {{ ventaSeleccionada.tipoCambio }}
+                </span>
+              </div>
+              }
+
+
+              <app-form-field label="Notas / Observaciones">
+                <app-input-textarea [input_control]="observaciones"
+                  input_placeholder="Detalle de la transferencia, banco origen, etc...">
+                </app-input-textarea>
+              </app-form-field>
+
+            </div>
+          </app-card-container>
+
+          <!-- Comprobante -->
+          <app-card-container title="Comprobante Digital">
+            <div class="pago-upload-wrapper py-2">
+              <app-image-display-multiple
+              [editable]="true"
+              [maxFiles]="5"
+              [maxSizeMB]="5"
+              (filesChanged)="onArchivosChanged.emit($event)"
+            ></app-image-display-multiple>
+            </div>
+          </app-card-container>
+
+          <!-- Resumen -->
+          <app-card-container title="Resumen de Transacción">
+            <span class="pago-kicker">Totales del recibo</span>
+
+            @if (ventaSeleccionada) {
+            <div class="summary-row muted-row">
+              <span>Cliente</span>
+              <strong class="text-end">{{ ventaSeleccionada.nombreCompletoCliente }}</strong>
+            </div>
+            <div class="summary-row muted-row">
+              <span>Venta</span>
+              <strong>#{{ ventaSeleccionada.nroVenta }}</strong>
+            </div>
+            <div class="summary-row muted-row">
+              <span>Saldo pendiente</span>
+              <strong>
+                {{ ventaSeleccionada.moneda }}
+                {{ ventaSeleccionada.saldoPendiente | number: '1.2-2' }}
+              </strong>
+            </div>
+            }
+
+            <div class="summary-row highlighted">
+              <span>Monto a Registrar</span>
+              <strong>{{ monedaValue }} {{ montoValue | number: '1.2-2' }}</strong>
+            </div>
+
+            <!-- <div class="summary-row muted-row">
+              <span>Tipo de Operación</span>
+              <strong>AMORTIZACIÓN FIFO</strong>
+            </div> -->
+          </app-card-container>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</form>

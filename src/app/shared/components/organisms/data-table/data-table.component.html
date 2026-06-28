@@ -1,0 +1,31 @@
+<div class="dt-wrapper">
+  <!-- Toolbar -->
+  <div class="dt-toolbar">
+    @if (showCreate) {
+      <button class="dt-btn-create" (click)="onCreateClick()">
+        <i class="bi bi-plus-lg"></i> Crear
+      </button>
+    }
+  </div>
+
+  <!-- Grid container -->
+  <div class="dt-grid-wrapper" [style.height]="height">
+    <ag-grid-angular
+      #gridContainer
+      class="ag-theme-quartz dt-grid"
+      [columnDefs]="computedColumnDefs"
+      [gridOptions]="gridOptions"
+      (gridReady)="onGridReady($event)"
+      (rowClicked)="onRowClicked($event)"
+      (filterChanged)="onFilterChanged($event)"
+      (gridSizeChanged)="onGridSizeChanged($event)"
+      (firstDataRendered)="onFirstDataRendered($event)"
+    ></ag-grid-angular>
+
+    @if (loading) {
+      <div class="dt-loading-overlay">
+        <div class="dt-spinner"></div>
+      </div>
+    }
+  </div>
+</div>

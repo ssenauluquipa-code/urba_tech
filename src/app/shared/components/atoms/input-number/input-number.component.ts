@@ -1,0 +1,163 @@
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MaskitoOptions } from '@maskito/core';
+import { NzIconDirective } from 'ng-zorro-antd/icon';
+import { InputErrorMessagesComponent } from '../input-error-messages/input-error-messages.component';
+import { MaskitoDirective } from '@maskito/angular';
+import { NgStyle, NgClass} from '@angular/common';
+import { NzInputGroupComponent, NzInputGroupWhitSuffixOrPrefixDirective, NzInputDirective } from 'ng-zorro-antd/input';
+import { ɵNzTransitionPatchDirective } from 'ng-zorro-antd/core/transition-patch';
+
+@Component({
+    selector: 'app-input-number',
+    template: `<nz-input-group
+                [nzSize]="input_size"
+                [nzSuffix]="suffixTemplateInfo"
+                [nzPrefix]="prefixTemplateUser"
+                [nzStatus]="input_control.invalid && input_control.touched?'error':''">
+                <!-- input -->
+                  <input
+                    #inputElement
+                    nz-input
+                    type="text"
+                    [attr.inputmode]="allow_decimals ? 'decimal' : 'numeric'"
+                    [placeholder]="input_placeholder"
+                    [maxlength]="input_maxlength? input_maxlength + 1 : null"
+                    [formControl]="input_control"
+                    (blur)="onInputBlur($event)"
+                    [ngStyle]="customStyles"
+                    [ngClass]="customClass"
+                    [maskito]="maskitoOptions"
+                    />
+
+                </nz-input-group>
+                <!-- Messages -->
+                 @if(help_text && input_control.valid){
+                  <small class="text-muted">
+                  <span nz-icon nzType="check-circle" nzTheme="fill" nzTheme="twotone" nzTwotoneColor="#52c41a"></span>
+                  {{help_text}}
+                </small>
+                 }
+                <!-- Error Messages -->
+                 @if (show_error_messages) {
+                   <app-input-error-messages
+                     [input_control]="input_control"
+                     [minValue]="input_minvalue"
+                     [maxValue]="input_maxvalue"
+                     [minLength]="input_minlength"
+                     [maxLength]="input_maxlength"
+                     [patternValidMessage]="patternValidMessage">
+                   </app-input-error-messages>
+                 }
+                <!-- Templates -->
+                <ng-template #prefixTemplateUser>
+                  @if (prefix_icon) {
+                    <span nz-icon [nzType]="prefix_icon" nzTheme="outline" class="me-1"></span>
+                  }
+                </ng-template>
+                <ng-template #suffixTemplateInfo>
+                  @if (suffix_icon) {
+                    <span nz-icon [nzType]="suffix_icon" nzTheme="outline" ></span>
+                  }
+                </ng-template>
+            `,
+    styles: `
+      :host {
+        display: block;
+        width: 100%;
+      }
+      .text-muted {
+        display: block;
+        margin-top: 4px;
+        font-size: 12px;
+        color: #52c41a;
+      }
+    `,
+    standalone: true,
+    imports: [
+      ɵNzTransitionPatchDirective,
+      NzInputGroupComponent,
+      NzInputGroupWhitSuffixOrPrefixDirective,
+      NzInputDirective,
+      FormsModule,
+      ReactiveFormsModule,
+      NgStyle,
+      NgClass,
+      MaskitoDirective,
+      NzIconDirective,
+      InputErrorMessagesComponent
+    ]
+})
+export class InputNumberComponent implements OnInit {
+  @ViewChild('inputElement') inputElement!: ElementRef;
+
+  @Output() BlurValue = new EventEmitter<string | number>();
+  @Input() input_control = new FormControl<string | number | null>(null);
+  @Input() input_size: 'large' | 'default' | 'small' = 'default';
+  @Input() input_placeholder = 'Ingrese un número';
+  @Input() help_text = '';
+  @Input() prefix_icon = '';
+  @Input() suffix_icon = '';
+  @Input() setFocus = false;
+  @Input() input_maxlength = 0;
+  @Input() input_minlength = 0;
+  @Input() input_maxvalue = 0;
+  @Input() input_minvalue = 0;
+  @Input() show_error_messages = true;
+  @Input() patternValidMessage = 'Ingrese un número válido';
+  @Input() customStyles: Record<string, string> = {};
+  @Input() customClass = '';
+  @Input() allow_decimals = false; // Permitir decimales
+  @Input() decimal_precision = 0; // 0 = ilimitado, >0 limita la cantidad de decimales
+  @Input() decimal_separator = '.'; // Separador decimal (. o ,)
+
+  public passwordVisible = false;
+
+  // Configuración para solo números enteros o decimales
+  public maskitoOptions: MaskitoOptions = { mask: /^\d+$/ };
+
+  ngOnInit(): void {
+    this.onSetFocus();
+    this.configureMask();
+  }
+
+  //metodo para el input
+  public onInputBlur(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    this.BlurValue.emit(target.value);
+  }
+
+  /** Configura la máscara según si permite decimales o no */
+  private configureMask(): void {
+    if (this.allow_decimals) {
+      const separator = this.decimal_separator === ',' ? ',' : '\\.';
+
+      if (this.decimal_precision > 0) {
+        // Limita la cantidad de decimales: 123.45 o 123,45 con hasta N dígitos
+        this.maskitoOptions = {
+          mask: new RegExp(`^\\d+(${separator}\\d{0,${this.decimal_precision}})?$`)
+        };
+      } else {
+        // Permite cualquier cantidad de decimales
+        this.maskitoOptions = {
+          mask: new RegExp(`^\\d+${separator}?\\d*$`)
+        };
+      }
+    } else {
+      // Solo números enteros
+      this.maskitoOptions = {
+        mask: /^\d+$/
+      };
+    }
+  }
+
+  /** Activa el focus del input al iniciar el componente siempre y cuando la
+   * propiedad setFocus sea verdadera => [setFocus]="true" */
+  private onSetFocus(): void {
+    setTimeout(() => {
+      if (this.setFocus && this.inputElement) {
+        this.inputElement.nativeElement.focus();
+      }
+    }, 100);
+  }
+}

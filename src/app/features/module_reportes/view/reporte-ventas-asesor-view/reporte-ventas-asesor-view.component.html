@@ -1,0 +1,35 @@
+<div class="container-fluid px-0 mt-3 animate-fade-in">  
+    <app-report-filter
+      [formGroup]="filterForm"
+      [columnDefs]="columnas"
+      [mostrarBtnLimpiar]="!!filterForm.value.buscar"
+      (onLimpiar)="filterForm.reset({ buscar: '', moneda: 'USD' })"
+      (visibilidadColumnaChange)="onCambiarVisibilidadColumnas($event)">
+      
+      <div class="form-group-inline d-flex align-items-center gap-3">
+        <div class="input-icon-wrapper" style="width: 180px;">
+          <app-select-moneda [input_control]="monedaControl"></app-select-moneda>
+        </div>
+        <div class="input-icon-wrapper flex-grow-1">
+          <app-input-text [input_control]="buscarControl" placeholder="Buscar por asesor o documento...">
+            
+          </app-input-text>          
+        </div>
+      </div>
+    </app-report-filter>
+
+    @if (isLoading) {
+      <div class="d-flex justify-content-center my-5">
+        <div class="spinner-border text-primary" role="status"></div>
+      </div>
+    } @else {
+      <app-data-table
+        #tablaComponent
+        [showCreate]="false"
+        [columnDefs]="columnas"
+        [rowData]="datos"
+        [actions]="[]"
+        emptyMessage="No se registran métricas de rendimiento para los asesores del proyecto activo.">
+      </app-data-table>  
+    }
+</div>

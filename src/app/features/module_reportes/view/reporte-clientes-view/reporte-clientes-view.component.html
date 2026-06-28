@@ -1,0 +1,39 @@
+<div class="container-fluid px-0 mt-3 animate-fade-in">
+    <app-report-filter
+      [formGroup]="filterForm"
+      [columnDefs]="columnas"
+      [mostrarBtnLimpiar]="!!(filterForm.value.busqueda || filterForm.value.genero)"
+      (onLimpiar)="limpiarFiltros()"
+      (visibilidadColumnaChange)="onCambiarVisibilidadColumnas($event)">
+
+      <div class="row w-100">
+        <div class="col-12 col-sm-6 col-md-5 col-xl-4 mb-2 mb-sm-0">
+          <app-form-field label="Búsqueda de Cliente">
+            <app-input-text
+              [input_control]="getControl('busqueda')"
+              icon="bi-search"
+              placeholder="Nombre o documento..."            
+            ></app-input-text>
+          </app-form-field>
+        </div>
+        <div class="col-12 col-sm-6 col-md-5 col-xl-4">
+          <app-form-field label="Género">
+            <app-select-gender
+              [inputControl]="getControl('genero')"
+            ></app-select-gender>
+          </app-form-field>
+        </div>
+      </div>
+    </app-report-filter>  
+
+  <app-data-table
+    #tablaComponent
+    [showCreate]="false"
+    [columnDefs]="columnas"
+    [rowData]="datos"
+    [actions]="[]"
+    emptyMessage="No se encontraron registros de clientes para mostrar con los filtros seleccionados."
+  >
+  </app-data-table>
+
+</div>

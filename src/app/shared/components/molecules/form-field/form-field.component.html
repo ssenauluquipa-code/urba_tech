@@ -1,0 +1,23 @@
+<div class="form-field-wrapper">
+  <!-- LABEL -->
+  @if (label) {
+    <label class="form-label-custom" [attr.for]="forId">
+      {{ label }}
+      @if (required) {
+        <span class="required-mark">*</span>
+      }
+    </label>
+  }
+
+  <!-- INPUT / SELECT / ETC -->
+  <div class="form-control-wrapper">
+    <ng-content></ng-content>
+  </div>
+
+  <!-- ERROR -->
+  @if (errorTip) {
+    <div class="form-error">
+      {{ errorTip }}
+    </div>
+  }
+</div>

@@ -1,0 +1,135 @@
+// Restauramos tu contenedor original
+.visualizer-container {
+    background-color: #f8fafc;
+    border: 2px dashed #cbd5e1; // <--- Aquí está tu borde de puntos
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+}
+
+.manzana-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
+}
+
+// DISEÑO DE LOTE (Cuadrado y Uniforme)
+.lote-box {
+    // Tamaño fijo para que no crezca por dimensiones
+    width: 90px;
+    height: 90px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    position: relative;
+    user-select: none;
+    font-family: 'DM Mono', monospace;
+
+    .lote-number {
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 1;
+    }
+
+    .lote-status-tag {
+        font-size: 9px;
+        text-transform: uppercase;
+        margin-top: 4px;
+        opacity: 0.7;
+    }
+
+    .lote-icon {
+        position: absolute;
+        top: 4px;
+        right: 6px;
+        font-size: 10px;
+    }
+
+    &:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    // Estilo de selección
+    &.selected {
+        border: 2px solid #2962ff !important;
+        transform: scale(1.05);
+        z-index: 10;
+    }
+}
+
+// COLORES DE ESTADO (Inspirados en el ejemplo limpio)
+.lote-box.DISPONIBLE {
+    background-color: #E8F5E9;
+    border-color: #A5D6A7;
+    color: #1B5E20;
+}
+
+.lote-box.RESERVADO {
+    background-color: #FFF8E1;
+    border-color: #F59E0B;
+    color: #92400E;
+}
+
+.lote-box.VENDIDO {
+    background-color: #FCE4EC;
+    border-color: #F48FB1;
+    color: #880E4F;
+}
+
+.lote-box.BLOQUEADO {
+    background-color: #F1F5F9;
+    border-color: #CBD5E1;
+    color: #475569;
+    opacity: 0.6;
+}
+
+// LEYENDA (Tus estilos originales)
+.legend {
+    display: flex;
+    flex-wrap: wrap; // Permitir que los elementos bajen si no caben
+    justify-content: center;
+    gap: 15px;      // Un poco menos de espacio para que quepan mejor
+    margin-top: 24px;
+    padding-top: 15px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: #64748b;
+}
+
+.dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+
+    &.available {
+        background-color: #A5D6A7;
+    }
+
+    &.reserved {
+        background-color: #F59E0B;
+    }
+
+    &.sold {
+        background-color: #F48FB1;
+    }
+
+    &.blocked {
+        background-color: #CBD5E1;
+    }
+}

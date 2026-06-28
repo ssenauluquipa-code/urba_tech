@@ -1,0 +1,105 @@
+import '@angular/localize/init';
+
+import { AppComponent } from './app/app.component';
+import { Approutes } from './app/app-routing.module';
+import { provideRouter } from '@angular/router';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { provideAnimations } from '@angular/platform-browser/animations';
+import { BrowserModule, bootstrapApplication } from '@angular/platform-browser';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzModalModule } from 'ng-zorro-antd/modal';
+import { importProvidersFrom } from '@angular/core';
+import {
+  provideHttpClient,
+  withInterceptors,
+  withInterceptorsFromDi,
+} from '@angular/common/http';
+import { authInterceptor } from './app/core/interceptors/auth.interceptor';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { NZ_I18N, en_US, es_ES, provideNzI18n } from 'ng-zorro-antd/i18n';
+import {
+  LocationStrategy,
+  PathLocationStrategy,
+  CommonModule,
+  registerLocaleData,
+} from '@angular/common';
+
+// AG Grid - Register Community Modules
+import { ModuleRegistry, AllCommunityModule, ClientSideRowModelModule, InfiniteRowModelModule } from 'ag-grid-community';
+import { ProyectoRepository } from './app/core/repository/proyectos/proyecto.repository';
+import { UserRepository } from './app/core/repository/user.repository';
+import { USER_REPOSITORY_TOKEN } from './app/core/services/user.service';
+import { AuthRepository } from './app/core/repository/auth.repository';
+import { ORGANIZATION_REPOSITORY_TOKEN } from './app/core/services/configuracion/organization.service';
+import { OrganizationRepository } from './app/core/repository/configuracion/organization.repository';
+import { PROYECTO_REPOSITORY_TOKEN } from './app/core/services/proyectos/proyecto.service';
+import { MANZANA_REPOSITORY_TOKEN } from './app/core/services/proyectos/manzana.service';
+import { LOTE_REPOSITORY_TOKEN } from './app/core/services/proyectos/lote.service';
+import { ManzanaRepository } from './app/core/repository/proyectos/manzana.repository';
+import { LoteRepository } from './app/core/repository/proyectos/lote.repository';
+import { ClienteRepository } from './app/core/repository/cliente.repository';
+import { CLIENTE_REPOSITORY_TOKEN } from './app/core/services/cliente.service';
+import { ASESOR_REPOSITORY_TOKEN } from './app/core/services/asesor.service';
+import { AsesorRepository } from './app/core/repository/asesor.repository';
+import es from '@angular/common/locales/es';
+import { RESERVA_REPOSITORY_TOKEN } from './app/core/services/reserva.service';
+import { ReservaRepository } from './app/core/repository/reserva.repository';
+import { VentaRepository } from './app/core/repository/venta.repository';
+import { PagosRepository } from './app/core/repository/pagos.repository';
+import { NotificacionRepository } from './app/core/repository/notificacion.repository';
+import { projectInterceptor } from './app/core/interceptors/project.interceptor';
+import { ReporteRepository } from './app/core/repository/reportes/reportes.reportory';
+
+ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule, InfiniteRowModelModule]);
+
+registerLocaleData(es);
+
+bootstrapApplication(AppComponent, {
+  providers: [
+    importProvidersFrom(
+      CommonModule,
+      BrowserModule,
+      FormsModule,
+      ReactiveFormsModule,
+      NgbModule,
+    ),
+    {
+      provide: LocationStrategy,
+      useClass: PathLocationStrategy,
+    },
+    { provide: NZ_I18N, useValue: en_US },
+    // 🔑 REGISTRO DEL REPOSITORIO PARA DIP
+    {
+      provide: USER_REPOSITORY_TOKEN,
+      useClass: UserRepository,
+    },
+    { provide: 'IAuthRepository', useClass: AuthRepository },
+    {
+      provide: ORGANIZATION_REPOSITORY_TOKEN,
+      useClass: OrganizationRepository,
+    },
+    { provide: PROYECTO_REPOSITORY_TOKEN, useClass: ProyectoRepository },
+    // 🆕 Manzana
+    { provide: MANZANA_REPOSITORY_TOKEN, useClass: ManzanaRepository },
+
+    // 🆕 Lote
+    { provide: LOTE_REPOSITORY_TOKEN, useClass: LoteRepository },
+    { provide: CLIENTE_REPOSITORY_TOKEN, useClass: ClienteRepository },
+    { provide: ASESOR_REPOSITORY_TOKEN, useClass: AsesorRepository },
+    { provide: RESERVA_REPOSITORY_TOKEN, useClass: ReservaRepository },
+    { provide: 'IVentaRepository', useClass: VentaRepository },
+    { provide: 'IPagosRepository', useClass: PagosRepository },
+    { provide: 'INotificacionRepository', useClass: NotificacionRepository },
+    { provide: 'IReporteRepository', useClass: ReporteRepository },
+    provideAnimationsAsync(),
+    importProvidersFrom(NzIconModule, NzModalModule),
+    provideAnimations(),
+    provideHttpClient(
+      withInterceptors([projectInterceptor, authInterceptor]),
+      withInterceptorsFromDi(),
+    ),
+    provideRouter(Approutes),
+    provideNzI18n(es_ES),
+  ],
+}).catch((err) => console.error(err));

@@ -1,0 +1,61 @@
+@if (esGraficoVacio) {
+  <div class="card w-100 border-0 shadow-sm rounded-lg py-5 animate-fade-in text-center">
+    <div class="card-body">
+      <div class="mb-3">
+        <i class="bi bi-graph-down text-muted" style="font-size: 3rem;"></i>
+      </div>
+      <h5 class="fw-bold text-secondary">Sin transacciones en este período</h5>
+      <p class="text-muted mx-auto" style="max-width: 420px; font-size: 0.9rem;">
+        No se registraron transacciones comerciales en el rango de fechas seleccionado para el proyecto activo.
+      </p>
+    </div>
+  </div>
+} @else {
+  <app-card-container class="h-100 d-block animate-fade-in">
+    <!-- Cabecera Responsiva: Centrada y vertical en móvil, alineada y horizontal en desktop -->
+    <div class="d-flex flex-column flex-sm-row align-items-center text-center text-sm-start mb-3">
+      <span class="p-2 bg-light-{{ iconColor }} text-{{ iconColor }} rounded-circle mb-2 mb-sm-0 me-0 me-sm-2 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; min-width: 40px; min-height: 40px; flex-shrink: 0;">
+        <i [class]="icon + ' fs-5'"></i>
+      </span>
+      <div class="w-100">
+        <h5 class="card-title mb-0 fw-bold text-dark text-height-adjust">{{ title }}</h5>
+        <small class="text-muted d-block text-height-adjust-sub">{{ subtitle }}</small>
+      </div>
+    </div>
+    <div class="w-100 mt-2" *ngIf="chartOptions">
+      <apx-chart 
+        [series]="chartOptions.series!" 
+        [chart]="chartOptions.chart!"
+        [xaxis]="chartOptions.xaxis!" 
+        [yaxis]="chartOptions.yaxis!"
+        [grid]="chartOptions.grid!" 
+        [stroke]="chartOptions.stroke || {}" 
+        [tooltip]="chartOptions.tooltip!" 
+        [dataLabels]="chartOptions.dataLabels!"
+        [colors]="chartOptions.colors!">
+      </apx-chart>
+    </div>
+  </app-card-container>
+}
+
+<style>
+  /* Ajustes responsivos para que el texto de la cabecera del gráfico no se desborde */
+  .text-height-adjust {
+    font-size: 1rem;
+    line-height: 1.2;
+  }
+  .text-height-adjust-sub {
+    font-size: 0.8rem;
+    line-height: 1.2;
+  }
+
+  @media (max-width: 576px) {
+    .text-height-adjust {
+      font-size: 0.85rem !important;
+      font-weight: 700 !important;
+    }
+    .text-height-adjust-sub {
+      font-size: 0.7rem !important;
+    }
+  }
+</style>

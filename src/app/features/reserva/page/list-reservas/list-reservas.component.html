@@ -1,0 +1,28 @@
+<app-page-container
+  title="Gestión de Reservas"
+  [permissionScope]="EAppModule.RESERVAS"
+  [showNew]="true"
+  [showOptions]="true"
+  (AddNew)="onAddNew()"
+  (MenuExportPDF)="exportarPDF()"
+  (MenuExportExcel)="exportarExcel()"
+>
+  
+  <!-- TABLA DE DATOS -->
+  <app-data-table
+    [rowData]="reservas"
+    [columnDefs]="columnDefs"
+    [loading]="loading"
+    [showCreate]="false"
+    [module]="EAppModule.RESERVAS"
+    [actions]="[
+      tableActionEnum.VIEW,
+      tableActionEnum.VENTA,
+      tableActionEnum.ANULAR,
+      tableActionEnum.DELETE,
+      tableActionEnum.EDIT
+    ]"
+    (actionClicked)="onTableAction($event)"
+  >
+  </app-data-table>
+</app-page-container>

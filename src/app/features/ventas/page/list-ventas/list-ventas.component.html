@@ -1,0 +1,31 @@
+<!-- src/app/features/gestion-ventas/pages/list-ventas/list-ventas.component.html -->
+
+<app-page-container
+  title="Gestión de Ventas"
+  [permissionScope]="EAppModule.VENTAS"
+  [showNew]="true"
+  [showOptions]="true"
+  (AddNew)="onAddNew()"
+  (MenuExportPDF)="exportarPDF()"
+  (MenuExportExcel)="exportarExcel()"
+>
+  <!-- Espaciado superior mínimo ya que los filtros están en la tabla -->
+  <app-data-table
+    [module]="EAppModule.VENTAS"
+    [rowData]="ventas"
+    [columnDefs]="columnDefs"
+    [loading]="loading"
+    [showCreate]="false"
+    [actions]="[
+      tableActionEnum.VIEW,
+      tableActionEnum.ANULAR,
+      tableActionEnum.DELETE,
+      tableActionEnum.PAGO,
+      tableActionEnum.PLAN_CUENTAS,  
+      tableActionEnum.DEVOLUCION,
+      tableActionEnum.CONTRATOS
+    ]"
+    (actionClicked)="onTableAction($event)"
+  >
+  </app-data-table>
+</app-page-container>

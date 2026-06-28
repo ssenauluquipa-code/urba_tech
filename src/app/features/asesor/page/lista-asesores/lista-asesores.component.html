@@ -1,0 +1,32 @@
+<app-page-container
+  title="Gestión de Asesores"
+  [permissionScope]="EAppModule.ASESORES"
+  [showNew]="true"
+  [showOptions]="true"
+  (AddNew)="onAddNew()"
+  (MenuExportPDF)="exportarPDF()"
+  (MenuExportExcel)="exportarExcel()"
+>
+  <!-- Tabla -->
+  <!-- 
+    IMPORTANTE: No ponemos [serverSide]="true".
+    Como el backend devuelve un array simple, el tabla funcionará en modo cliente,
+    paginando y ordenando los datos que le pasamos automáticamente.
+  -->
+  <app-data-table
+    [module]="EAppModule.ASESORES"
+    [rowData]="asesores"
+    [columnDefs]="columnDefs"
+    [loading]="loading"
+    [showCreate]="false"
+    [actions]="[
+      tableActionEnum.EDIT,
+      tableActionEnum.DEACTIVATE,
+      tableActionEnum.ACTIVATE,
+      tableActionEnum.VIEW,
+    ]"
+    (actionClicked)="onTableAction($event)"
+    (filterChanged)="onTableFilterChanged($event)"
+  >
+  </app-data-table>
+</app-page-container>

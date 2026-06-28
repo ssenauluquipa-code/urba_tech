@@ -1,0 +1,103 @@
+import { ChangeDetectionStrategy, Component, Input, inject } from '@angular/core';
+import { CommonModule, Location } from '@angular/common';
+import { Router } from '@angular/router';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzMenuModule } from 'ng-zorro-antd/menu';
+import { EPageAction, EPageMenuAction } from 'src/app/core/models/page-action.enum';
+import { PageActionService, AnyPageAction } from 'src/app/core/services/page-action.service';
+import { AccessControlService } from 'src/app/core/services/access-control.service';
+import { EAppModule, EAppAction } from 'src/app/core/config/permissions.enum';
+import { IPageConfig, DEFAULT_PAGE_CONFIG } from 'src/app/core/models/page-config.interface';
+
+@Component({
+  selector: 'app-sub-header',
+  standalone: true,
+  imports: [CommonModule, NzButtonModule, NzDropDownModule, NzIconModule, NzMenuModule],
+  templateUrl: './sub-header.component.html',
+  styleUrls: ['./sub-header.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class SubHeaderComponent {
+  private pageActionService = inject(PageActionService);
+  private access = inject(AccessControlService);
+  private router = inject(Router);
+  private location = inject(Location);
+
+  @Input() title = '';
+  @Input() permissionScope?: string;
+  @Input() backRoute?: string[];
+  @Input() hasBackListener = false;
+  @Input() hasCancelListener = false;
+  @Input() loading = false;
+
+  @Input() config: IPageConfig = { ...DEFAULT_PAGE_CONFIG };
+
+  public readonly A = EPageAction;
+  public readonly M = EPageMenuAction;
+
+  get canShowNew(): boolean { 
+    return !!this.config.showNew && (!this.permissionScope || this.access.can(this.permissionScope as EAppModule, EAppAction.CREATE)); 
+  }
+  get canShowSave(): boolean { 
+    return !!this.config.showSave && (!this.permissionScope || this.access.can(this.permissionScope as EAppModule, EAppAction.EDIT)); 
+  }
+  get canShowEdit(): boolean { 
+    return !!this.config.showEdit && (!this.permissionScope || this.access.can(this.permissionScope as EAppModule, EAppAction.EDIT)); 
+  }
+  get canShowDelete(): boolean { 
+    return !!this.config.showDelete && (!this.permissionScope || this.access.can(this.permissionScope as EAppModule, EAppAction.DELETE)); 
+  }
+  get canShowUpdate(): boolean { 
+    return !!this.config.showUpdate && (!this.permissionScope || this.access.can(this.permissionScope as EAppModule, EAppAction.VIEW)); 
+  }
+
+  get canShowCancel(): boolean { return !!this.config.showCancel; }
+  get canShowSend(): boolean { return !!this.config.showSend; }
+  get canShowOptions(): boolean { return !!this.config.showOptions; }
+  get canShowExportExcel(): boolean { return !!this.config.showExportExcel; }
+  get canShowExportPdf(): boolean { return !!this.config.showExportPdf; }
+  get canShowImportExcel(): boolean { return !!this.config.showImportExcel; }
+  get canShowPrint(): boolean { return !!this.config.showPrint; }
+  get canShowLog(): boolean { return !!this.config.showLog; }
+  get canShowBack(): boolean { return !!this.config.showBack; }
+
+  get canShowCustom(): boolean { return !!this.config.showCustom; }
+  get customLabel(): string { return this.config.customLabel || 'Acción'; }
+  get customIcon(): string { return this.config.customIcon || 'bi bi-plus-circle'; }
+
+  get hasPrimaryActions(): boolean {
+    return this.canShowNew || this.canShowSave || this.canShowSend;
+  }
+
+  get hasSecondaryActions(): boolean {
+    return this.canShowEdit || this.canShowDelete || this.canShowCancel || this.canShowUpdate;
+  }
+
+  get hasMobileActions(): boolean {
+    return this.hasPrimaryActions || this.hasSecondaryActions;
+  }
+
+  private goBack(): void {
+    if (this.backRoute) {
+      this.router.navigate(this.backRoute);
+    } else {
+      this.location.back();
+    }
+  }
+
+  emitAction(action: AnyPageAction): void {
+    if (action === EPageAction.BACK && !this.hasBackListener) {
+      this.goBack();
+      return;
+    }
+
+    if (action === EPageAction.CANCEL && !this.hasCancelListener) {
+      this.goBack();
+      return;
+    }
+
+    this.pageActionService.emitAction(action);
+  }
+}

@@ -1,0 +1,114 @@
+// src/app/shared/components/atoms/badge-estado.component.scss
+
+.badge-estado {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 12px; // Un poco más de aire lateral
+  border-radius: 9999px;
+  font-size: 12px !important; // 12px es óptimo para interfaces densas y AG-Grid
+  font-weight: 600;
+  line-height: 1.25rem;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  border: 1px solid transparent;
+
+  // ── ESTADOS GENÉRICOS (Booleanos) ─────────────────────
+  &.activo, &.activa {
+    background-color: rgba(0, 210, 106, 0.1); // Verde brillante
+    color: #00d26a;
+    border-color: rgba(0, 210, 106, 0.2);
+  }
+
+  &.inactivo {
+    background-color: rgba(220, 38, 38, 0.1); // Rojo
+    color: #dc2626;
+    border-color: rgba(220, 38, 38, 0.2);
+  }
+
+  // ── LOTES (Urbanismo) ───────────────────────────────
+  &.disponible {
+    background-color: rgba(0, 210, 106, 0.1); // Verde brillante
+    color: #00d26a;
+    border-color: rgba(0, 210, 106, 0.2);
+  }
+
+  &.reservado {
+    background-color: #fffbeb; // Amber 50
+    color: #92400e; // Amber 800
+    border-color: #fde68a; // Amber 200
+  }
+
+  &.vendido {
+    background-color: rgba(15, 23, 42, 0.1); // Azul profundo
+    color: #0f172a;
+    border-color: rgba(15, 23, 42, 0.2);
+  }
+
+  &.bloqueado {
+    background-color: rgba(220, 38, 38, 0.1); // Rojo
+    color: #dc2626;
+    border-color: rgba(220, 38, 38, 0.2);
+  }
+
+  // ── RESERVAS Y CUOTAS (Alertas de Mora) ──────────────
+  &.vencido, &.vencida {
+    background-color: rgba(239, 68, 68, 0.1); // Rojo unificado de alerta
+    color: #ef4444;
+    border-color: rgba(239, 68, 68, 0.2);
+  }
+
+  &.convertida {
+    background-color: #faf5ff; // Purple 50
+    color: #6b21a8; // Purple 800
+    border-color: #e9d5ff; // Purple 200
+  }
+
+  &.cancelada {
+    background-color: #f1f5f9; // Slate 100
+    color: #64748b; // Slate 500
+    border-color: #cbd5e1; // Slate 300
+  }
+
+  // ── VENTAS (Tipos de Pago) ──────────────────────────
+  &.contado {
+    background-color: #ebf8ff; // Blue 50
+    color: #2c5282; // Blue 800
+    border-color: #bee3f8; // Blue 200
+  }
+
+  &.cuotas {
+    background-color: #fffaf0; // Orange 50
+    color: #9c4221; // Orange 800
+    border-color: #feebc8; // Orange 200
+  }
+
+  // ── CRONOGRAMA DE PAGOS (Amortización FIFO) ─────────
+  &.pagado {
+    background-color: rgba(16, 185, 129, 0.1); // Verde esmeralda sutil
+    color: #10b981;
+    border-color: rgba(16, 185, 129, 0.2);
+  }
+
+  &.parcial {
+    background-color: rgba(245, 158, 11, 0.1); // Ámbar/Naranja de abono parcial
+    color: #d97706;
+    border-color: rgba(245, 158, 11, 0.2);
+  }
+
+  &.pendiente {
+    background-color: #f1f5f9; // Gris Slate neutro
+    color: #475569;
+    border-color: #cbd5e1;
+  }
+  &.anulado{
+    background-color: #f1f5f9; // Gris Slate neutro
+    color: #475569;
+    border-color: #cbd5e1;
+  }
+  &.anulada{
+    background-color: #f1f5f9; // Gris Slate neutro
+    color: #475569;
+    border-color: #cbd5e1;
+  }
+}

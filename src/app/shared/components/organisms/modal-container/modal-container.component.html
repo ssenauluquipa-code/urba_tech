@@ -1,0 +1,52 @@
+<div class="urban-modal-wrapper">
+  <!-- Header y Body se mantienen igual -->
+  <div appDragModal class="modal-header d-flex align-items-center justify-content-between">
+    <div>
+      <h4 class="modal-title mb-0">{{ mainTitleModal }}</h4>
+      @if (subtitle) {
+        <small class="text-muted">{{ subtitle }}</small>
+      }
+    </div>
+    <button type="button" class="btn-close-custom" (click)="activeModal.dismiss()">
+      <span nz-icon nzType="close" nzTheme="outline"></span>
+    </button>
+  </div>
+
+  <div class="modal-body">
+    <ng-content></ng-content>
+  </div>
+
+  @if (showFooter) {
+    <div class="modal-footer bg-light-gray">
+      <!-- Botón Cancelar -->
+      <button nz-button nzType="default" class="btn-rounded" (click)="CancelAction.emit()">
+        <span nz-icon nzType="close-circle"></span> {{ cancelButtonName }}
+      </button>
+
+      <!-- NUEVO: Botón Personalizado (Opcional) -->
+      @if (showCustomButton) {
+        <button 
+          nz-button 
+          [nzType]="customButtonType" 
+          [nzDanger]="customButtonDanger"
+          class="btn-rounded" 
+          (click)="CustomAction.emit()"
+        >
+          <span nz-icon [nzType]="customButtonIcon"></span> {{ customButtonText }}
+        </button>
+      }
+
+      <!-- Botón Guardar (Principal) -->
+      <button
+        nz-button
+        nzType="primary"
+        [nzDanger]="saveButtonDanger"
+        class="btn-rounded shadow-sm"
+        [nzLoading]="loading"
+        (click)="SaveAction.emit()"
+      >
+        <span nz-icon [nzType]="saveButtonIcon"></span> {{ saveButtonName }}
+      </button>
+    </div>
+  }
+</div>

@@ -1,0 +1,41 @@
+<div class="container-fluid px-0 mt-3 animate-fade-in">
+    
+    <app-report-filter
+      [formGroup]="filterForm"
+      [columnDefs]="columnas"
+      [mostrarBtnLimpiar]="!!(filterForm.value.fechaRegistro || filterForm.value.fechaVencimiento || filterForm.value.estado)"
+      (onLimpiar)="limpiarFiltros()"
+      (visibilidadColumnaChange)="onCambiarVisibilidadColumnas($event)">
+
+      <div class="row w-100">
+        <div class="col-12 col-sm-6 col-md-4 col-xl-3 mb-2 mb-md-0">
+          <app-form-field label="Fecha Registro (Desde)">
+            <app-input-date [input_control]="getControl('fechaRegistro')"></app-input-date>
+          </app-form-field>
+        </div>
+        
+        <div class="col-12 col-sm-6 col-md-4 col-xl-3 mb-2 mb-md-0">
+          <app-form-field label="Fecha Venci. (Hasta)">
+            <app-input-date [input_control]="getControl('fechaVencimiento')"></app-input-date>
+          </app-form-field>
+        </div>
+
+        <div class="col-12 col-sm-6 col-md-4 col-xl-3">
+          <app-form-field label="Estado">
+            <app-select-estado-reserva [inputControl]="getControl('estado')"></app-select-estado-reserva>
+          </app-form-field>
+        </div>
+      </div>
+
+    </app-report-filter>  
+    <app-data-table
+      #tablaComponent
+      [showCreate]="false"
+      [columnDefs]="columnas"
+      [rowData]="datos"
+      [actions]="[]"
+      emptyMessage="No se encontraron registros de reservas para mostrar con los filtros seleccionados."
+    >
+    </app-data-table>  
+
+</div>
